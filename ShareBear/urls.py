@@ -8,8 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', user_views.UserList.as_view()),
     re_path('users/(?P<pk>[0-9]+)/', user_views.UserDetail.as_view()),
- #   path('items/', item_views.ItemList.as_view()),
-  #  re_path('items/(?P<pk>[0-9]+)/', item_views.ItemDetail.as_view()),
+    path('profiles/', user_views.ProfileList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from UserAPI.models import User
-from UserAPI.serializers import UserSerializer
+from UserAPI.models import *
+from UserAPI.serializers import *
 from django.http import Http404
 
 # Lists all users or creates a new one
@@ -16,9 +16,12 @@ class UserList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        print('Self = ',self)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            print('----------User is saved--------')
+#            ProfileList.post(self,request)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -32,6 +35,7 @@ class UserDetail(APIView):
 
     def get(self, request, pk):
         snippet = self.get_object(pk)
+#        print('Snippet = ', snippet)
         serializer = UserSerializer(snippet)
 
         return Response(serializer.data)
@@ -49,3 +53,15 @@ class UserDetail(APIView):
         snippet.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Lists all profiles or creates a new one
+# profiles/
+class ProfileList(APIView):
+
+    def get(self, request):
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+
+        return Response(serializer.data)
+

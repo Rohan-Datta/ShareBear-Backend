@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models import CharField, IntegerField
+from django_mysql.models import ListCharField
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Authentication user model
 class User(models.Model):
@@ -13,4 +17,10 @@ class User(models.Model):
 
 # User profile model
 class Profile(models.Model):
-    displayName = models.CharField(max_length=200)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
+    points = models.IntegerField(default=1)
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
